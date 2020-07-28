@@ -2,11 +2,10 @@ package aws
 
 import (
 	"fmt"
+
 	"github.com/aws/aws-sdk-go/aws"
-	"github.com/aws/aws-sdk-go/aws/credentials"
 	"github.com/aws/aws-sdk-go/aws/session"
 	aws_s3 "github.com/aws/aws-sdk-go/service/s3"
-	"os"
 )
 
 type Client struct {
@@ -14,13 +13,8 @@ type Client struct {
 }
 
 func NewClient() (*Client, error) {
-	profile := os.Getenv("F-13-AWS-PROFILE")
-
-	var config *aws.Config
-	if profile != "" {
-		config = &aws.Config{
-			Credentials: credentials.NewSharedCredentials("", profile),
-		}
+	config := &aws.Config{
+		Region: aws.String("us-east-2"),
 	}
 
 	session, err := session.NewSession(config)

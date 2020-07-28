@@ -2,7 +2,7 @@ package main
 
 import (
 	"fmt"
-	stg2 "github.com/Foundation-13/mwarehouse/src/service/stg"
+	stg2 "github.com/Foundation-13/mwarehouse/src/service/storage"
 	"net/http"
 
 	"github.com/labstack/echo"
@@ -25,7 +25,7 @@ func main() {
 
 	fmt.Printf("AWS opened !!!")
 
-	stg := stg2.NewAWSClient("temp", aws.S3)
+	stg := stg2.NewAWSClient("foundation-13-temporary", aws.S3)
 
 	m := api.NewManager(stg)
 

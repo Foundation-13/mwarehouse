@@ -26,17 +26,28 @@ type handler struct {
 // handlers
 
 func (h *handler) upload(c echo.Context) error {
+	ctx := c.Request().Context()
+
 	// Source
-	file, err := c.FormFile("file")
+	fileHeader, err := c.FormFile("file")
 	if err != nil {
 		return err
 	}
 
-	f, err := file.Open()
+	f, err := fileHeader.Open()
 	if err != nil {
 		return err
 	}
 	defer f.Close()
+
+	contentType := fileHeader.Header.Get("Content-Type")
+
+	id, err := h.manager.UploadMedia(ctx, f, fileHeader.Filename, contentType)
+	if err != nil {
+		return err
+	}
+
+	c.JSON(http.StatusCreated, map[string]string{"id": id})
 
 	return nil
 }
