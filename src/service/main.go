@@ -1,11 +1,15 @@
 package main
 
 import (
-	"github.com/labstack/echo"
-	"github.com/labstack/echo/middleware"
+	"fmt"
+	stg2 "github.com/Foundation-13/mwarehouse/src/service/stg"
 	"net/http"
 
+	"github.com/labstack/echo"
+	"github.com/labstack/echo/middleware"
+
 	"github.com/Foundation-13/mwarehouse/src/service/api"
+	"github.com/Foundation-13/mwarehouse/src/service/aws"
 )
 
 func main() {
@@ -14,7 +18,16 @@ func main() {
 	e.Use(middleware.Logger())
 	e.Use(middleware.Recover())
 
-	m := api.NewManager()
+	aws, err := aws.NewClient()
+	if err != nil {
+		panic(err)
+	}
+
+	fmt.Printf("AWS opened !!!")
+
+	stg := stg2.NewAWSClient("temp", aws.S3)
+
+	m := api.NewManager(stg)
 
 	api.Assemble(e, m)
 
