@@ -10,7 +10,8 @@ import (
 //go:generate mockery -name Client -outpkg storagemocks -output ./storagemocks -dir .
 type Client interface {
 	Name() string
-	Put(ctx context.Context, r io.Reader, name string) error
+
+	Put(ctx context.Context, r io.Reader, key string) error
 }
 
 func NewAWSClient(bucket string, uploader aws.S3Uploader) Client {

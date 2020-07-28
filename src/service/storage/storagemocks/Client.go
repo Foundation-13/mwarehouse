@@ -28,13 +28,13 @@ func (_m *Client) Name() string {
 	return r0
 }
 
-// Put provides a mock function with given fields: ctx, r, name
-func (_m *Client) Put(ctx context.Context, r io.Reader, name string) error {
-	ret := _m.Called(ctx, r, name)
+// Put provides a mock function with given fields: ctx, r, key
+func (_m *Client) Put(ctx context.Context, r io.Reader, key string) error {
+	ret := _m.Called(ctx, r, key)
 
 	var r0 error
 	if rf, ok := ret.Get(0).(func(context.Context, io.Reader, string) error); ok {
-		r0 = rf(ctx, r, name)
+		r0 = rf(ctx, r, key)
 	} else {
 		r0 = ret.Error(0)
 	}

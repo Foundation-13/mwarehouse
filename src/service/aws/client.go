@@ -2,13 +2,16 @@ package aws
 
 import (
 	"fmt"
+
 	"github.com/aws/aws-sdk-go/aws"
 	"github.com/aws/aws-sdk-go/aws/session"
+	"github.com/aws/aws-sdk-go/service/dynamodb"
 	"github.com/aws/aws-sdk-go/service/s3/s3manager"
 )
 
 type Client struct {
-	S3 S3Uploader
+	S3     S3Uploader
+	Dynamo DynamoWrapper
 }
 
 func NewClient() (*Client, error) {
@@ -23,8 +26,10 @@ func NewClient() (*Client, error) {
 	}
 
 	s3 := s3manager.NewUploader(session)
+	dynamo := dynamodb.New(session)
 
 	return &Client{
-		S3: s3,
+		S3:     s3,
+		Dynamo: dynamo,
 	}, nil
 }

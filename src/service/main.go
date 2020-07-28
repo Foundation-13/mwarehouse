@@ -2,8 +2,6 @@ package main
 
 import (
 	"fmt"
-	stg2 "github.com/Foundation-13/mwarehouse/src/service/storage"
-	"github.com/Foundation-13/mwarehouse/src/service/utils"
 	"net/http"
 
 	"github.com/labstack/echo"
@@ -11,6 +9,9 @@ import (
 
 	"github.com/Foundation-13/mwarehouse/src/service/api"
 	"github.com/Foundation-13/mwarehouse/src/service/aws"
+	"github.com/Foundation-13/mwarehouse/src/service/db"
+	"github.com/Foundation-13/mwarehouse/src/service/storage"
+	"github.com/Foundation-13/mwarehouse/src/service/utils"
 )
 
 func main() {
@@ -26,9 +27,10 @@ func main() {
 
 	fmt.Printf("AWS opened !!!")
 
-	stg := stg2.NewAWSClient("foundation-13-temporary", aws.S3)
+	stg := storage.NewAWSClient("foundation-13-temporary", aws.S3)
+	db := db.NewDynamoDBClient(aws.Dynamo)
 
-	m := api.NewManager(stg, utils.XID{})
+	m := api.NewManager(stg, db, utils.XID{})
 
 	api.Assemble(e, m)
 
