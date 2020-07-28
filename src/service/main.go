@@ -3,6 +3,7 @@ package main
 import (
 	"fmt"
 	stg2 "github.com/Foundation-13/mwarehouse/src/service/storage"
+	"github.com/Foundation-13/mwarehouse/src/service/utils"
 	"net/http"
 
 	"github.com/labstack/echo"
@@ -27,7 +28,7 @@ func main() {
 
 	stg := stg2.NewAWSClient("foundation-13-temporary", aws.S3)
 
-	m := api.NewManager(stg)
+	m := api.NewManager(stg, utils.XID{})
 
 	api.Assemble(e, m)
 

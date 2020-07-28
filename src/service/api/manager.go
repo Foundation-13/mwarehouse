@@ -2,6 +2,7 @@ package api
 
 import (
 	"context"
+	"github.com/Foundation-13/mwarehouse/src/service/utils"
 	"io"
 
 	"github.com/Foundation-13/mwarehouse/src/service/storage"
@@ -12,9 +13,10 @@ type Manager interface {
 	UploadMedia(ctx context.Context, r io.ReadSeeker, fileName string, contentType string) (string, error)
 }
 
-func NewManager(stg storage.Client) Manager {
+func NewManager(stg storage.Client, idGen utils.IDGen) Manager {
 	return &manager{
 		stg: stg,
+		idGen: idGen,
 	}
 }
 
@@ -22,10 +24,16 @@ func NewManager(stg storage.Client) Manager {
 
 type manager struct {
 	stg storage.Client
+	idGen utils.IDGen
 }
 
 func (m *manager) UploadMedia(ctx context.Context, r io.ReadSeeker, fileName string, contentType string) (string, error) {
-	err := m.stg.Put(ctx, r, fileName)
+	newFileID := m.idGen.NewID()
 
-	return "1", err
+	err := m.stg.Put(ctx, r, newFileID)
+	if err != nil {
+		return "", err
+	}
+
+	return newFileID, err
 }

@@ -15,18 +15,18 @@ type Manager struct {
 }
 
 // UploadMedia provides a mock function with given fields: ctx, r, fileName, contentType
-func (_m *Manager) UploadMedia(ctx context.Context, r io.Reader, fileName string, contentType string) (string, error) {
+func (_m *Manager) UploadMedia(ctx context.Context, r io.ReadSeeker, fileName string, contentType string) (string, error) {
 	ret := _m.Called(ctx, r, fileName, contentType)
 
 	var r0 string
-	if rf, ok := ret.Get(0).(func(context.Context, io.Reader, string, string) string); ok {
+	if rf, ok := ret.Get(0).(func(context.Context, io.ReadSeeker, string, string) string); ok {
 		r0 = rf(ctx, r, fileName, contentType)
 	} else {
 		r0 = ret.Get(0).(string)
 	}
 
 	var r1 error
-	if rf, ok := ret.Get(1).(func(context.Context, io.Reader, string, string) error); ok {
+	if rf, ok := ret.Get(1).(func(context.Context, io.ReadSeeker, string, string) error); ok {
 		r1 = rf(ctx, r, fileName, contentType)
 	} else {
 		r1 = ret.Error(1)

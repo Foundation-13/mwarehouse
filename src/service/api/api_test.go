@@ -1,6 +1,7 @@
 package api_test
 
 import (
+	"bytes"
 	"net/http"
 	"testing"
 
@@ -8,6 +9,7 @@ import (
 	"github.com/buger/jsonparser"
 	"github.com/labstack/echo"
 	"github.com/stretchr/testify/assert"
+	"github.com/stretchr/testify/mock"
 
 	"github.com/Foundation-13/mwarehouse/src/service/api"
 	"github.com/Foundation-13/mwarehouse/src/service/api/apimocks"
@@ -21,14 +23,14 @@ func TestStatus(t *testing.T) {
 		Run(a.e, func(r gofight.HTTPResponse, rq gofight.HTTPRequest) {
 			assert.Equal(t, http.StatusOK, r.Code)
 
-			data := []byte(r.Body.String())
-			id, _ := jsonparser.GetString(data, "id")
-			assert.Equal(t, "123", id)
+			assertID(t, "123", r.Body, "id")
 		})
 }
 
 func TestUpload(t *testing.T) {
 	a := newApi()
+
+	a.m.On("UploadMedia", mock.Anything, mock.Anything, mock.Anything, mock.Anything).Return("123", nil)
 
 	a.r.POST("/media").
 		SetDebug(true).
@@ -40,7 +42,9 @@ func TestUpload(t *testing.T) {
 			},
 		}).
 		Run(a.e, func(r gofight.HTTPResponse, rq gofight.HTTPRequest) {
-			assert.Equal(t, http.StatusOK, r.Code)
+			assert.Equal(t, http.StatusCreated, r.Code)
+
+			assertID(t, "123", r.Body, "id")
 		})
 }
 
@@ -65,4 +69,10 @@ func newApi() mocks {
 		e: e,
 		m: m,
 	}
+}
+
+func assertID(t assert.TestingT, expected string, body *bytes.Buffer, keys ...string) {
+	data := []byte(body.String())
+	id, _ := jsonparser.GetString(data, keys...)
+	assert.Equal(t, expected, id)
 }
