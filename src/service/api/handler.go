@@ -40,16 +40,12 @@ func (h *handler) upload(c echo.Context) error {
 	}
 	defer f.Close()
 
-	contentType := fileHeader.Header.Get("Content-Type")
-
-	id, err := h.manager.UploadMedia(ctx, f, fileHeader.Filename, contentType)
+	id, err := h.manager.UploadMedia(ctx, f, fileHeader.Filename)
 	if err != nil {
 		return err
 	}
 
-	c.JSON(http.StatusCreated, map[string]string{"id": id})
-
-	return nil
+	return c.JSON(http.StatusCreated, map[string]string{"id": id})
 }
 
 func (h *handler) status(c echo.Context) error {

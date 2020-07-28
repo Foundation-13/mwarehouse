@@ -50,13 +50,13 @@ func TestUpload(t *testing.T) {
 
 // helpers
 
-type mocks struct {
+type apiMocks struct {
 	r *gofight.RequestConfig
 	e *echo.Echo
 	m *apimocks.Manager
 }
 
-func newApi() mocks {
+func newApi() apiMocks {
 	r := gofight.New()
 
 	e := echo.New()
@@ -64,7 +64,7 @@ func newApi() mocks {
 
 	api.Assemble(e, m)
 
-	return mocks{
+	return apiMocks{
 		r: r,
 		e: e,
 		m: m,
@@ -72,7 +72,7 @@ func newApi() mocks {
 }
 
 func assertID(t assert.TestingT, expected string, body *bytes.Buffer, keys ...string) {
-	data := []byte(body.String())
+	data := body.Bytes()
 	id, _ := jsonparser.GetString(data, keys...)
 	assert.Equal(t, expected, id)
 }

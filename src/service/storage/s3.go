@@ -2,25 +2,26 @@ package storage
 
 import (
 	"context"
-	"github.com/Foundation-13/mwarehouse/src/service/aws"
-	aws_s3 "github.com/aws/aws-sdk-go/service/s3"
 	"io"
+
+	"github.com/Foundation-13/mwarehouse/src/service/aws"
+	"github.com/aws/aws-sdk-go/service/s3/s3manager"
 )
 
 type s3Impl struct {
-	wrapper  aws.S3Wrapper
-	basePath string
+	uploader aws.S3Uploader
+	bucket   string
 }
 
 func (s *s3Impl) Name() string {
-	return s.basePath
+	return s.bucket
 }
 
-func (s *s3Impl) Put(ctx context.Context, r io.ReadSeeker, name string) error {
-	_, err := s.wrapper.PutObject(&aws_s3.PutObjectInput{
-		Key: &name,
-		Bucket: &s.basePath,
-		Body: r,
+func (s *s3Impl) Put(ctx context.Context, r io.Reader, key string) error {
+	_, err := s.uploader.Upload(&s3manager.UploadInput{
+		Body:   r,
+		Bucket: &s.bucket,
+		Key:    &key,
 	})
 
 	return err

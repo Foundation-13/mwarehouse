@@ -33,8 +33,7 @@ func main() {
 	api.Assemble(e, m)
 
 	e.GET("/", func(c echo.Context) error {
-		c.JSON(http.StatusOK, map[string]string{"status": "green"})
-		return nil
+		return c.JSON(http.StatusOK, map[string]string{"status": "green"})
 	})
 
 	e.Logger.Fatal(e.Start(":8765"))

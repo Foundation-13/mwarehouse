@@ -2,14 +2,13 @@ package aws
 
 import (
 	"fmt"
-
 	"github.com/aws/aws-sdk-go/aws"
 	"github.com/aws/aws-sdk-go/aws/session"
-	aws_s3 "github.com/aws/aws-sdk-go/service/s3"
+	"github.com/aws/aws-sdk-go/service/s3/s3manager"
 )
 
 type Client struct {
-	S3 S3Wrapper
+	S3 S3Uploader
 }
 
 func NewClient() (*Client, error) {
@@ -23,7 +22,7 @@ func NewClient() (*Client, error) {
 		return nil, fmt.Errorf("failed to open AWS session: %w", err)
 	}
 
-	s3 := aws_s3.New(session)
+	s3 := s3manager.NewUploader(session)
 
 	return &Client{
 		S3: s3,

@@ -7,14 +7,15 @@ import (
 	"github.com/Foundation-13/mwarehouse/src/service/aws"
 )
 
+//go:generate mockery -name Client -outpkg storagemocks -output ./storagemocks -dir .
 type Client interface {
 	Name() string
-	Put(ctx context.Context, r io.ReadSeeker, name string) error
+	Put(ctx context.Context, r io.Reader, name string) error
 }
 
-func NewAWSClient(bucket string, wrapper aws.S3Wrapper) Client {
+func NewAWSClient(bucket string, uploader aws.S3Uploader) Client {
 	return &s3Impl{
-		wrapper:  wrapper,
-		basePath: bucket,
+		uploader: uploader,
+		bucket:   bucket,
 	}
 }
