@@ -1,0 +1,35 @@
+AWSTemplateFormatVersion: '2010-09-09'
+Transform: AWS::Serverless-2016-10-31
+Description: >
+  AWS
+
+  Sample SAM Template for AWS
+
+Globals:
+  Function:
+    Timeout: 3
+
+Resources:
+  ApplyImageFilterFunction:
+    Type: AWS::Serverless::Function
+    Properties:
+      CodeUri: functions
+      Handler: apply_image_filters/app.lambda_handler
+      Runtime: python3.8
+      Events:
+        ApplyImageFilter:
+          Type: EventBridgeRule
+          Properties:
+            Pattern:
+              source:
+                - mwarehouse.lambda
+              detail-type:
+                - mwarehouse.image.apply-filters
+
+Outputs:
+  ApplyImageFilterFunction:
+    Description: "Apply Image Filter Lambda Function ARN"
+    Value: !GetAtt ApplyImageFilterFunction.Arn
+  ApplyImageFilterIamRole:
+    Description: "Implicit IAM Role created for Apply Image Filter function"
+    Value: !GetAtt ApplyImageFilterRole.Arn
