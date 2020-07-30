@@ -2,6 +2,8 @@ package aws
 
 import (
 	"fmt"
+	"net/http"
+	"time"
 
 	"github.com/aws/aws-sdk-go/aws"
 	"github.com/aws/aws-sdk-go/aws/session"
@@ -17,6 +19,9 @@ type Client struct {
 func NewClient() (*Client, error) {
 	config := &aws.Config{
 		Region: aws.String("us-east-2"),
+		MaxRetries:                    aws.Int(1),
+		CredentialsChainVerboseErrors: aws.Bool(true),
+		HTTPClient: &http.Client{Timeout: 10 * time.Second},
 	}
 
 	session, err := session.NewSession(config)
