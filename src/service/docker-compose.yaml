@@ -6,3 +6,5 @@ services:
       - "8765:8765"
     environment:
       - TEST_MODE=1
+      - REGION="us-east-2"
+      - BUCKET_NAME="foundation-13-temporary"

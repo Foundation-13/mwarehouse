@@ -9,25 +9,31 @@ import (
 
 	"github.com/Foundation-13/mwarehouse/src/service/api"
 	"github.com/Foundation-13/mwarehouse/src/service/aws"
+	"github.com/Foundation-13/mwarehouse/src/service/config"
 	"github.com/Foundation-13/mwarehouse/src/service/db"
 	"github.com/Foundation-13/mwarehouse/src/service/storage"
 	"github.com/Foundation-13/mwarehouse/src/service/utils"
 )
 
 func main() {
+	cfg, err := config.FromEnvironment()
+	if err != nil {
+		panic(err)
+	}
+
 	e := echo.New()
 
 	e.Use(middleware.Logger())
 	e.Use(middleware.Recover())
 
-	aws, err := aws.NewClient()
+	aws, err := aws.NewClient(cfg.Region)
 	if err != nil {
 		panic(err)
 	}
 
 	fmt.Printf("AWS opened !!!")
 
-	stg := storage.NewAWSClient("foundation-13-temporary", aws.S3)
+	stg := storage.NewAWSClient(cfg.BucketName, aws.S3)
 	db := db.NewDynamoDBClient(aws.Dynamo)
 
 	m := api.NewManager(stg, db, utils.XID{})
