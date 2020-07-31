@@ -15,7 +15,7 @@ func Assemble(e *echo.Echo, m Manager) {
 
 	g.POST("", h.upload)
 
-	g.GET("/:id/status", h.status)
+	g.GET("/:key/status", h.status)
 	g.GET("/jobs", h.jobs)
 }
 
@@ -49,8 +49,16 @@ func (h *handler) upload(c echo.Context) error {
 }
 
 func (h *handler) status(c echo.Context) error {
-	id := c.Param("id")
-	return c.JSON(http.StatusOK, map[string]string{"id": id})
+	ctx := c.Request().Context()
+
+	key := c.Param("key")
+
+	result, err := h.manager.GetJobStatus(ctx, key)
+	if err != nil {
+		return err
+	}
+
+	return c.JSON(http.StatusOK, result)
 }
 
 func (h *handler) jobs(c echo.Context) error {

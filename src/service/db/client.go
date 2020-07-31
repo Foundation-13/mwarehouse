@@ -9,6 +9,7 @@ import (
 //go:generate mockery -name Client -outpkg dbmocks -output ./dbmocks -dir .
 type Client interface {
 	CreateJob(ctx context.Context, key string, fileName string) (*types.Job, error)
+	GetJobStatus(ctx context.Context, key string) (types.Job, error)
 }
 
 func NewDynamoDBClient(wrapper aws.DynamoWrapper) Client {

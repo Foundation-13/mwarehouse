@@ -2,6 +2,7 @@ package api
 
 import (
 	"context"
+	"github.com/Foundation-13/mwarehouse/src/service/types"
 	"io"
 
 	"github.com/Foundation-13/mwarehouse/src/service/db"
@@ -12,6 +13,7 @@ import (
 //go:generate mockery -name Manager -outpkg apimocks -output ./apimocks -dir .
 type Manager interface {
 	UploadMedia(ctx context.Context, r io.Reader, fileName string) (string, error)
+	GetJobStatus(ctx context.Context, key string) (types.JobStatusDTO, error)
 }
 
 func NewManager(stg storage.Client, db db.Client, idGen utils.IDGen) Manager {
@@ -44,4 +46,15 @@ func (m *manager) UploadMedia(ctx context.Context, r io.Reader, fileName string)
 	}
 
 	return newID, err
+}
+
+func (m *manager) GetJobStatus(ctx context.Context, key string) (types.JobStatusDTO, error) {
+	mdl, err := m.db.GetJobStatus(ctx, key)
+	if err != nil {
+		return types.JobStatusDTO{}, err
+	}
+
+	dto := types.NewJobStatusDTO(mdl)
+
+	return dto, nil
 }
