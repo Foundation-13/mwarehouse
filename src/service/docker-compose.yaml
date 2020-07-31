@@ -4,6 +4,8 @@ services:
     build: .
     ports:
       - "8765:8765"
+    volumes:
+      - $HOME/.aws:/root/.aws:ro
     environment:
-      - REGION="us-east-2"
-      - TEMP_BUCKET_NAME="foundation-13-temporary"
+      - MW_AWS_REGION=${MW_AWS_REGION}
+      - MW_TEMP_BUCKET_NAME=${MW_TEMP_BUCKET_NAME}
