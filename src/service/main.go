@@ -3,20 +3,20 @@ package main
 import (
 	"fmt"
 	"net/http"
+	"os"
 
 	"github.com/labstack/echo"
 	"github.com/labstack/echo/middleware"
 
 	"github.com/Foundation-13/mwarehouse/src/service/api"
 	"github.com/Foundation-13/mwarehouse/src/service/aws"
-	"github.com/Foundation-13/mwarehouse/src/service/config"
 	"github.com/Foundation-13/mwarehouse/src/service/db"
 	"github.com/Foundation-13/mwarehouse/src/service/storage"
 	"github.com/Foundation-13/mwarehouse/src/service/utils"
 )
 
 func main() {
-	cfg, err := config.FromEnvironment()
+	cfg, err := FromEnvironment()
 	if err != nil {
 		panic(err)
 	}
@@ -33,7 +33,7 @@ func main() {
 
 	fmt.Printf("AWS opened !!!")
 
-	stg := storage.NewAWSClient(cfg.BucketName, aws.S3)
+	stg := storage.NewAWSClient(cfg.TempBucketName, aws.S3)
 	db := db.NewDynamoDBClient(aws.Dynamo)
 
 	m := api.NewManager(stg, db, utils.XID{})
@@ -45,4 +45,26 @@ func main() {
 	})
 
 	e.Logger.Fatal(e.Start(":8765"))
+}
+
+type Config struct {
+	Region 			string
+	TempBucketName 	string
+}
+
+func FromEnvironment () (Config, error) {
+	region := os.Getenv("REGION")
+	if region == "" {
+		return Config{}, fmt.Errorf("REGION env variable is not defined")
+	}
+
+	tempBucketName := os.Getenv("TEMP_BUCKET_NAME")
+	if tempBucketName == "" {
+		return Config{}, fmt.Errorf("TEMP_BUCKEY_NAME env variable is not defined")
+	}
+
+	return Config{
+		Region: region,
+		TempBucketName: tempBucketName,
+	}, nil
 }
