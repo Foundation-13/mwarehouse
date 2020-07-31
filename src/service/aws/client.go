@@ -2,6 +2,8 @@ package aws
 
 import (
 	"fmt"
+	"net/http"
+	"time"
 
 	"github.com/aws/aws-sdk-go/aws"
 	"github.com/aws/aws-sdk-go/aws/session"
@@ -14,9 +16,12 @@ type Client struct {
 	Dynamo DynamoWrapper
 }
 
-func NewClient() (*Client, error) {
+func NewClient(region string) (*Client, error) {
 	config := &aws.Config{
-		Region: aws.String("us-east-2"),
+		Region: aws.String(region),
+		MaxRetries:                    aws.Int(1),
+		CredentialsChainVerboseErrors: aws.Bool(true),
+		HTTPClient: &http.Client{Timeout: 10 * time.Second},
 	}
 
 	session, err := session.NewSession(config)
