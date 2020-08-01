@@ -2,6 +2,7 @@ package api_test
 
 import (
 	"bytes"
+	"github.com/Foundation-13/mwarehouse/src/service/types"
 	"net/http"
 	"testing"
 
@@ -16,15 +17,28 @@ import (
 )
 
 func TestStatus(t *testing.T) {
-	a := newApi()
+	t.Run("key is empty", func(t *testing.T) {
+		a := newApi()
 
-	a.r.GET("/media/123/status").
-		SetDebug(true).
-		Run(a.e, func(r gofight.HTTPResponse, rq gofight.HTTPRequest) {
-			assert.Equal(t, http.StatusOK, r.Code)
-
-			assertID(t, "123", r.Body, "id")
+		a.r.GET("/media//status").SetDebug(true).
+			Run(a.e, func(r gofight.HTTPResponse, rq gofight.HTTPRequest) {
+				assert.Equal(t, http.StatusInternalServerError, r.Code)
 		})
+	})
+
+	t.Run("succeeded", func(t *testing.T) {
+		a := newApi()
+
+		a.m.On("GetJobStatus", mock.Anything, mock.Anything).Return(types.JobStatus(0), nil)
+
+		a.r.GET("/media/123/status").SetDebug(true).
+			Run(a.e, func(r gofight.HTTPResponse, rq gofight.HTTPRequest) {
+				assert.Equal(t, http.StatusOK, r.Code)
+
+				assertID(t, "123", r.Body, "key")
+				assertID(t, "0", r.Body, "status")
+		})
+	})
 }
 
 func TestUpload(t *testing.T) {

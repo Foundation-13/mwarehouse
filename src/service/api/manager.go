@@ -13,7 +13,7 @@ import (
 //go:generate mockery -name Manager -outpkg apimocks -output ./apimocks -dir .
 type Manager interface {
 	UploadMedia(ctx context.Context, r io.Reader, fileName string) (string, error)
-	GetJobStatus(ctx context.Context, key string) (types.JobStatusDTO, error)
+	GetJobStatus(ctx context.Context, key string) (types.JobStatus, error)
 }
 
 func NewManager(stg storage.Client, db db.Client, idGen utils.IDGen) Manager {
@@ -48,13 +48,11 @@ func (m *manager) UploadMedia(ctx context.Context, r io.Reader, fileName string)
 	return newID, err
 }
 
-func (m *manager) GetJobStatus(ctx context.Context, key string) (types.JobStatusDTO, error) {
-	mdl, err := m.db.GetJobStatus(ctx, key)
+func (m *manager) GetJobStatus(ctx context.Context, key string) (types.JobStatus, error) {
+	res, err := m.db.GetJobStatus(ctx, key)
 	if err != nil {
-		return types.JobStatusDTO{}, err
+		return types.JobStatus(404), err
 	}
 
-	dto := types.NewJobStatusDTO(mdl)
-
-	return dto, nil
+	return res, nil
 }

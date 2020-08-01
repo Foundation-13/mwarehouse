@@ -52,13 +52,19 @@ func (h *handler) status(c echo.Context) error {
 	ctx := c.Request().Context()
 
 	key := c.Param("key")
+	if key == "" {
+		return fmt.Errorf("key is empty")
+	}
 
 	result, err := h.manager.GetJobStatus(ctx, key)
 	if err != nil {
 		return err
 	}
 
-	return c.JSON(http.StatusOK, result)
+	return c.JSON(http.StatusOK, map[string]string{
+		"key": key,
+		"status": fmt.Sprint(result),
+	})
 }
 
 func (h *handler) jobs(c echo.Context) error {

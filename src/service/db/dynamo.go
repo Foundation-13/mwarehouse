@@ -47,7 +47,7 @@ func (d *dynamoImpl) CreateJob(ctx context.Context, key string, fileName string)
 	return &job, nil
 }
 
-func (d *dynamoImpl) GetJobStatus(ctx context.Context, key string) (types.Job, error) {
+func (d *dynamoImpl) GetJobStatus(ctx context.Context, key string) (types.JobStatus, error) {
 	input := &dynamodb.GetItemInput{
 		TableName: aws2.String(jobsTable),
 		Key: map[string]*dynamodb.AttributeValue{
@@ -59,18 +59,18 @@ func (d *dynamoImpl) GetJobStatus(ctx context.Context, key string) (types.Job, e
 
 	res, err := d.db.GetItem(input)
 	if err != nil {
-		return types.Job{}, fmt.Errorf("failed to get item: %w", err)
+		return types.JobStatus(404), fmt.Errorf("failed to get item: %w", err)
 	}
 
 	job := types.Job{}
 	err = dynamodbattribute.UnmarshalMap(res.Item, &job)
 	if err != nil {
-		return types.Job{}, fmt.Errorf("failed to unmarshal job: %w", err)
+		return types.JobStatus(404), fmt.Errorf("failed to unmarshal job: %w", err)
 	}
 
 	if job.Key == "" {
-		return types.Job{}, fmt.Errorf("job with a key: %v not found", key)
+		return types.JobStatus(404), fmt.Errorf("job with a key: %v not found", key)
 	}
 
-	return job, nil
+	return job.Status, nil
 }

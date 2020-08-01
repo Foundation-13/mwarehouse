@@ -16,15 +16,3 @@ type Job struct {
 	Created int64
 	Status JobStatus
 }
-
-type JobStatusDTO struct {
-	Key		string		`json:"key"`
-	Status	JobStatus	`json:"status"`
-}
-
-func NewJobStatusDTO(job Job) JobStatusDTO {
-	return JobStatusDTO{
-		Key: job.Key,
-		Status: job.Status,
-	}
-}

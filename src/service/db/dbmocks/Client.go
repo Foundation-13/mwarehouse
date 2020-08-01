@@ -37,3 +37,24 @@ func (_m *Client) CreateJob(ctx context.Context, key string, fileName string) (*
 
 	return r0, r1
 }
+
+// GetJobStatus provides a mock function with given fields: ctx, key
+func (_m *Client) GetJobStatus(ctx context.Context, key string) (types.JobStatus, error) {
+	ret := _m.Called(ctx, key)
+
+	var r0 types.JobStatus
+	if rf, ok := ret.Get(0).(func(context.Context, string) types.JobStatus); ok {
+		r0 = rf(ctx, key)
+	} else {
+		r0 = ret.Get(0).(types.JobStatus)
+	}
+
+	var r1 error
+	if rf, ok := ret.Get(1).(func(context.Context, string) error); ok {
+		r1 = rf(ctx, key)
+	} else {
+		r1 = ret.Error(1)
+	}
+
+	return r0, r1
+}
