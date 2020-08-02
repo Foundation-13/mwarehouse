@@ -5,6 +5,7 @@ import (
 	"io"
 
 	"github.com/Foundation-13/mwarehouse/src/service/db"
+	"github.com/Foundation-13/mwarehouse/src/service/log"
 	"github.com/Foundation-13/mwarehouse/src/service/storage"
 	"github.com/Foundation-13/mwarehouse/src/service/utils"
 )
@@ -40,6 +41,7 @@ func (m *manager) UploadMedia(ctx context.Context, r io.Reader, fileName string)
 
 	err = m.stg.Put(ctx, r, newID)
 	if err != nil {
+		log.FromContext(ctx).WithError(err).Error("failed to put file into storage")
 		return "", err
 	}
 

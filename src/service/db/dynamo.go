@@ -2,7 +2,6 @@ package db
 
 import (
 	"context"
-	"fmt"
 	"time"
 
 	aws2 "github.com/aws/aws-sdk-go/aws"
@@ -10,6 +9,7 @@ import (
 	"github.com/aws/aws-sdk-go/service/dynamodb/dynamodbattribute"
 
 	"github.com/Foundation-13/mwarehouse/src/service/aws"
+	"github.com/Foundation-13/mwarehouse/src/service/log"
 	"github.com/Foundation-13/mwarehouse/src/service/types"
 )
 
@@ -31,7 +31,8 @@ func (d *dynamoImpl) CreateJob(ctx context.Context, key string, fileName string)
 
 	av, err := dynamodbattribute.MarshalMap(job)
 	if err != nil {
-		return nil, fmt.Errorf("failed to marshal job: %w", err)
+		log.FromContext(ctx).WithError(err).Error("failed to marshal job")
+		return nil, err
 	}
 
 	input := &dynamodb.PutItemInput{
@@ -41,7 +42,8 @@ func (d *dynamoImpl) CreateJob(ctx context.Context, key string, fileName string)
 
 	_, err = d.db.PutItem(input)
 	if err != nil {
-		return nil, fmt.Errorf("failed to store job: %w", err)
+		log.FromContext(ctx).WithError(err).Error("failed to store job")
+		return nil, err
 	}
 
 	return &job, nil
