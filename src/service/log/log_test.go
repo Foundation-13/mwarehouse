@@ -6,7 +6,7 @@ import (
 
 	"github.com/stretchr/testify/assert"
 
-	"gitlab.com/Foundation-13/mwarehouse/src/service/log"
+	"github.com/Foundation-13/mwarehouse/src/service/log"
 )
 
 func TestLogWithContext(t *testing.T) {
