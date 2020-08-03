@@ -13,18 +13,35 @@ import (
 
 	"github.com/Foundation-13/mwarehouse/src/service/api"
 	"github.com/Foundation-13/mwarehouse/src/service/api/apimocks"
+	"github.com/Foundation-13/mwarehouse/src/service/types"
 )
 
 func TestStatus(t *testing.T) {
-	a := newApi()
+	t.Run("key is empty", func(t *testing.T) {
+		a := newApi()
 
-	a.r.GET("/media/123/status").
-		SetDebug(true).
-		Run(a.e, func(r gofight.HTTPResponse, rq gofight.HTTPRequest) {
-			assert.Equal(t, http.StatusOK, r.Code)
-
-			assertID(t, "123", r.Body, "id")
+		a.r.GET("/media//status").SetDebug(true).
+			Run(a.e, func(r gofight.HTTPResponse, rq gofight.HTTPRequest) {
+				assert.Equal(t, http.StatusInternalServerError, r.Code)
 		})
+	})
+
+	t.Run("succeeded", func(t *testing.T) {
+		a := newApi()
+
+		a.m.On("GetJobStatus", mock.Anything, mock.Anything).Return(types.Job{
+			Status: types.JobStatus(0),
+			Key: "123",
+		}, nil)
+
+		a.r.GET("/media/123/status").SetDebug(true).
+			Run(a.e, func(r gofight.HTTPResponse, rq gofight.HTTPRequest) {
+				assert.Equal(t, http.StatusOK, r.Code)
+
+				assertID(t, "123", r.Body, "key")
+				assertID(t, "0", r.Body, "status")
+		})
+	})
 }
 
 func TestUpload(t *testing.T) {

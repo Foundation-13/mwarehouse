@@ -13,4 +13,5 @@ type S3Uploader interface {
 //go:generate mockery -name DynamoWrapper -outpkg awsmocks -output ./awsmocks -dir .
 type DynamoWrapper interface {
 	PutItem(input *dynamodb.PutItemInput) (*dynamodb.PutItemOutput, error)
+	GetItem(input *dynamodb.GetItemInput) (*dynamodb.GetItemOutput, error)
 }
