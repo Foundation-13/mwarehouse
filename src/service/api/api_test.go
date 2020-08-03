@@ -44,6 +44,19 @@ func TestStatus(t *testing.T) {
 	})
 }
 
+func TestProcess(t *testing.T) {
+	t.Run("succeeded", func(t *testing.T) {
+		a := newApi()
+
+		a.r.PUT("/media/123/process").SetDebug(true).
+			Run(a.e, func(resp gofight.HTTPResponse, req gofight.HTTPRequest) {
+				assert.Equal(t, http.StatusCreated, resp.Code)
+
+				assertID(t, "123", resp.Body, "key")
+		})
+	})
+}
+
 func TestUpload(t *testing.T) {
 	a := newApi()
 
