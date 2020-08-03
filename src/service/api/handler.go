@@ -15,6 +15,8 @@ func Assemble(e *echo.Echo, m Manager) {
 
 	g.POST("", h.upload)
 
+	g.PUT("/:key/process", h.process)
+
 	g.GET("/:key/status", h.status)
 	g.GET("/jobs", h.jobs)
 }
@@ -65,6 +67,13 @@ func (h *handler) status(c echo.Context) error {
 		"key": result.Key,
 		"status": fmt.Sprint(result.Status),
 	})
+}
+
+func (h *handler) process(c echo.Context) error {
+	//ctx := c.Request().Context()
+	key := c.Param("key")
+
+	return c.JSON(http.StatusOK, map[string]string{"key": key})
 }
 
 func (h *handler) jobs(c echo.Context) error {
