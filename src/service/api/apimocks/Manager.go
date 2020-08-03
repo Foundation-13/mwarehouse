@@ -37,6 +37,20 @@ func (_m *Manager) GetJobStatus(ctx context.Context, key string) (types.Job, err
 	return r0, r1
 }
 
+// ProcessMedia provides a mock function with given fields: ctx, key, filters
+func (_m *Manager) ProcessMedia(ctx context.Context, key string, filters types.Filters) error {
+	ret := _m.Called(ctx, key, filters)
+
+	var r0 error
+	if rf, ok := ret.Get(0).(func(context.Context, string, types.Filters) error); ok {
+		r0 = rf(ctx, key, filters)
+	} else {
+		r0 = ret.Error(0)
+	}
+
+	return r0
+}
+
 // UploadMedia provides a mock function with given fields: ctx, r, fileName
 func (_m *Manager) UploadMedia(ctx context.Context, r io.Reader, fileName string) (string, error) {
 	ret := _m.Called(ctx, r, fileName)
