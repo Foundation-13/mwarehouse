@@ -14,6 +14,7 @@ import (
 type Manager interface {
 	UploadMedia(ctx context.Context, r io.Reader, fileName string) (string, error)
 	GetJobStatus(ctx context.Context, key string) (types.Job, error)
+	ProcessMedia(ctx context.Context, key string, filters types.Filters) error
 }
 
 func NewManager(stg storage.Client, db db.Client, idGen utils.IDGen) Manager {
@@ -55,4 +56,8 @@ func (m *manager) GetJobStatus(ctx context.Context, key string) (types.Job, erro
 	}
 
 	return res, nil
+}
+
+func (m *manager) ProcessMedia(ctx context.Context, key string, filters types.Filters) error {
+	return nil
 }

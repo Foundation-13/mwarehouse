@@ -2,6 +2,7 @@ package api
 
 import (
 	"fmt"
+	"github.com/Foundation-13/mwarehouse/src/service/types"
 	"github.com/labstack/echo"
 	"net/http"
 )
@@ -70,10 +71,20 @@ func (h *handler) status(c echo.Context) error {
 }
 
 func (h *handler) process(c echo.Context) error {
-	//ctx := c.Request().Context()
+	ctx := c.Request().Context()
 	key := c.Param("key")
 
-	return c.JSON(http.StatusOK, map[string]string{"key": key})
+	filters, err := types.UnmarshalFilters(c.Request().Body)
+	if err != nil {
+		return err
+	}
+
+	err = h.manager.ProcessMedia(ctx, key, filters)
+	if err != nil {
+		return err
+	}
+
+	return nil
 }
 
 func (h *handler) jobs(c echo.Context) error {
