@@ -62,8 +62,8 @@ func (h *handler) status(c echo.Context) error {
 	}
 
 	return c.JSON(http.StatusOK, map[string]string{
-		"key": key,
-		"status": fmt.Sprint(result),
+		"key": result.Key,
+		"status": fmt.Sprint(result.Status),
 	})
 }
 

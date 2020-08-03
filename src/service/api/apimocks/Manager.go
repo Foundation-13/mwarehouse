@@ -17,14 +17,14 @@ type Manager struct {
 }
 
 // GetJobStatus provides a mock function with given fields: ctx, key
-func (_m *Manager) GetJobStatus(ctx context.Context, key string) (types.JobStatus, error) {
+func (_m *Manager) GetJobStatus(ctx context.Context, key string) (types.Job, error) {
 	ret := _m.Called(ctx, key)
 
-	var r0 types.JobStatus
-	if rf, ok := ret.Get(0).(func(context.Context, string) types.JobStatus); ok {
+	var r0 types.Job
+	if rf, ok := ret.Get(0).(func(context.Context, string) types.Job); ok {
 		r0 = rf(ctx, key)
 	} else {
-		r0 = ret.Get(0).(types.JobStatus)
+		r0 = ret.Get(0).(types.Job)
 	}
 
 	var r1 error

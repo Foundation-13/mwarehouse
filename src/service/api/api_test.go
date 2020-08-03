@@ -2,7 +2,6 @@ package api_test
 
 import (
 	"bytes"
-	"github.com/Foundation-13/mwarehouse/src/service/types"
 	"net/http"
 	"testing"
 
@@ -14,6 +13,7 @@ import (
 
 	"github.com/Foundation-13/mwarehouse/src/service/api"
 	"github.com/Foundation-13/mwarehouse/src/service/api/apimocks"
+	"github.com/Foundation-13/mwarehouse/src/service/types"
 )
 
 func TestStatus(t *testing.T) {
@@ -29,7 +29,10 @@ func TestStatus(t *testing.T) {
 	t.Run("succeeded", func(t *testing.T) {
 		a := newApi()
 
-		a.m.On("GetJobStatus", mock.Anything, mock.Anything).Return(types.JobStatus(0), nil)
+		a.m.On("GetJobStatus", mock.Anything, mock.Anything).Return(types.Job{
+			Status: types.JobStatus(0),
+			Key: "123",
+		}, nil)
 
 		a.r.GET("/media/123/status").SetDebug(true).
 			Run(a.e, func(r gofight.HTTPResponse, rq gofight.HTTPRequest) {

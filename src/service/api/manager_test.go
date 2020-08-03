@@ -56,12 +56,16 @@ func TestManager_GetJobStatus(t *testing.T) {
 	t.Run("succeeded", func(t *testing.T) {
 		subj, m := newManagerWithMocks()
 
-		m.db.On("GetJobStatus", mock.Anything, mock.Anything).Return(types.JobStatus(0), nil)
+		m.db.On("GetJobStatus", mock.Anything, mock.Anything).Return(types.Job{
+			Key: "123",
+			Status: types.JobStatus(0),
+		}, nil)
 
-		status, err := subj.GetJobStatus(context.Background(), "123")
+		job, err := subj.GetJobStatus(context.Background(), "123")
 
 		assert.NoError(t, err)
-		assert.Equal(t, types.JobStatus(0), status)
+		assert.Equal(t, types.JobStatus(0), job.Status)
+		assert.Equal(t, "123", job.Key)
 
 		m.db.AssertCalled(t, "GetJobStatus", mock.Anything, "123")
 	})
@@ -70,11 +74,11 @@ func TestManager_GetJobStatus(t *testing.T) {
 		subj, m := newManagerWithMocks()
 
 		m.db.On("GetJobStatus", mock.Anything, mock.Anything).
-			Return(types.JobStatus(404), fmt.Errorf(""))
+			Return(types.Job{}, fmt.Errorf(""))
 
 		status, err := subj.GetJobStatus(context.Background(), "123")
 
 		assert.Error(t, err)
-		assert.Equal(t, types.JobStatus(404), status)
+		assert.Equal(t, types.Job{}, status)
 	})
 }
