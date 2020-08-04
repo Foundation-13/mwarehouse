@@ -2,6 +2,7 @@ package api
 
 import (
 	"context"
+	"fmt"
 	"io"
 
 	"github.com/Foundation-13/mwarehouse/src/service/db"
@@ -36,12 +37,15 @@ func (m *manager) UploadMedia(ctx context.Context, r io.Reader, fileName string)
 
 	_, err := m.db.CreateJob(ctx, newID, fileName)
 	if err != nil {
+		err = fmt.Errorf("failed to create job, %w", err)
+		log.FromContext(ctx).WithError(err).Error("failed to upload media")
 		return "", err
 	}
 
 	err = m.stg.Put(ctx, r, newID)
 	if err != nil {
-		log.FromContext(ctx).WithError(err).Error("failed to put file into storage")
+		err = fmt.Errorf("failed to create add media into storage, %w", err)
+		log.FromContext(ctx).WithError(err).Error("failed to upload media")
 		return "", err
 	}
 
