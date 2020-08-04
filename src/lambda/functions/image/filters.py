@@ -1,13 +1,13 @@
 from timeit import default_timer as timer
 
-from PIL.Image import core as _imaging
+from PIL.Image import open
 from io import BytesIO
 
 
 def monochrome(buf):
     start = timer()
 
-    img = _imaging.open(BytesIO(buf))
+    img = open(BytesIO(buf))
     img = img.convert("L")
 
     buffer = BytesIO()

@@ -1,15 +1,15 @@
 import boto3
 
-from ..model.events import IncomingEvent
-from ..aws.aws import get_object, put_object
-from ..image.filters import monochrome
+from model.events import IncomingEvent
+from aws.aws import get_object, put_object
+from image.filters import monochrome
 
 
 def lambda_handler(event, context):
     """
     """
 
-    bucket = "foundation-13-temporary"
+    bucket = "foundation-13-temporary-bohdan"
 
     parsed_event = IncomingEvent(event)
     key = parsed_event.detail.key

@@ -3,6 +3,7 @@ from timeit import default_timer as timer
 
 def get_object(client, bucket, key):
     start = timer()
+    print("aws event({})".format(key))
     buf = client.get_object(Bucket=bucket, Key=key)['Body'].read()
     print("read from bucket: latency={}".format(timer() - start))
     return buf
