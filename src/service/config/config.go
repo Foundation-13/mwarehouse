@@ -8,6 +8,7 @@ import (
 type Config struct {
 	Region 			string
 	TempBucketName 	string
+	LocalRun		bool
 }
 
 func FromEnvironment () (Config, error) {
@@ -21,8 +22,11 @@ func FromEnvironment () (Config, error) {
 		return Config{}, fmt.Errorf("MW_TEMP_BUCKET_NAME env variable is not defined")
 	}
 
+	localRun := os.Getenv("MW_LOCAL_RUN") != ""
+
 	return Config{
 		Region: region,
 		TempBucketName: tempBucketName,
+		LocalRun: localRun,
 	}, nil
 }

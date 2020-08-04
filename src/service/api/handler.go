@@ -5,6 +5,9 @@ import (
 	"github.com/Foundation-13/mwarehouse/src/service/types"
 	"github.com/labstack/echo"
 	"net/http"
+
+
+	"github.com/Foundation-13/mwarehouse/src/service/log"
 )
 
 func Assemble(e *echo.Echo, m Manager) {
@@ -34,6 +37,7 @@ func (h *handler) upload(c echo.Context) error {
 	// Source
 	fileHeader, err := c.FormFile("file")
 	if err != nil {
+		log.FromContext(ctx).WithError(err).Error("failed to get file")
 		return err
 	}
 
