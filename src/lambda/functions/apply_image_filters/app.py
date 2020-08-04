@@ -9,7 +9,7 @@ def lambda_handler(event, context):
     """
     """
 
-    bucket = "foundation-13-temporary-bohdan"
+    bucket = "foundation-13-temporary"
 
     parsed_event = IncomingEvent(event)
     key = parsed_event.detail.key
