@@ -3,7 +3,7 @@ import pytest
 import moto
 import boto3
 from io import BytesIO
-from PIL import Image
+from PIL.Image import new
 
 
 @pytest.fixture()
@@ -27,7 +27,7 @@ def image_filters_event():
 
 @pytest.fixture()
 def image():
-    img = Image.new('RGB', (100, 1000), color='red')
+    img = new('RGB', (100, 1000), color='red')
     buffer = BytesIO()
     img.save(buffer, 'PNG')
     buffer.seek(0)

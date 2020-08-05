@@ -1,5 +1,3 @@
-
-
 class IncomingEventDetail(object):
 
     def __init__(self, d):
